@@ -19,3 +19,12 @@ A loop body can contains break, continue, return and error calls.
 A loop condition can be any expression for expr command.
 do command always returns empty string.
 
+Example
+=======
+
+```
+set i 5
+do {
+	puts $i
+} while {[incr i -1]}
+```
