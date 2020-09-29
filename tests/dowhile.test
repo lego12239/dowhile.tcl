@@ -1,0 +1,184 @@
+lappend auto_path [pwd]/../
+package require tcltest
+package require dowhile
+
+tcltest::test dowhile-1.0 {
+	something instead of "while"
+} -body {
+	set i 5
+	do {
+		incr i -1
+	} whil {$i}
+} -returnCodes error -result "wrong keyword \"whil\": must be \"while\""
+
+tcltest::test dowhile-2.0 {
+	simple while
+} -body {
+	set i 5
+	do {
+		incr i -1
+	} while {$i}
+	return $i
+} -result 0
+
+tcltest::test dowhile-2.1 {
+	simple while
+} -body {
+	set i 5
+	set val 0
+	do {
+		incr i -1
+		incr val
+	} while {$i}
+	return $val
+} -result 5
+
+tcltest::test dowhile-2.2 {
+	simple while with incr inside a condition
+} -body {
+	set i 5
+	do {
+	} while {[incr i -1]}
+	return $i
+} -result 0
+
+tcltest::test dowhile-3.0 {
+	simple while
+} -body {
+	set i 0
+	do {
+	} while {$i}
+	return $i
+} -result 0
+
+tcltest::test dowhile-4.0 {
+	error in the body
+} -body {
+	set i 5
+	do {
+		UNKNOWN
+		incr i -1
+	} while {$i}
+	return $i
+} -returnCodes error -result "invalid command name \"UNKNOWN\""
+
+tcltest::test dowhile-4.1 {
+	error in the body (catch)
+} -body {
+	set i 5
+	set code [catch {
+		do {
+			UNKNOWN
+		} while {[incr i -1]}
+	} ret]
+	return [list $i $code $ret]
+} -result {5 1 {invalid command name "UNKNOWN"}}
+
+tcltest::test dowhile-5.0 {
+	return in the body
+} -body {
+	set i 5
+	do {
+		if {$i == 3} {
+			return 77
+		}
+	} while {[incr i -1]}
+	return $i
+} -returnCodes return -result 77
+
+tcltest::test dowhile-5.1 {
+	return in the body
+} -body {
+	set i 5
+	do {
+		if {$i == 3} {
+			return [list $i 77]
+		}
+	} while {[incr i -1]}
+	return $i
+} -returnCodes return -result {3 77}
+
+tcltest::test dowhile-6.0 {
+	break in the body
+} -body {
+	set i 5
+	do {
+		if {$i == 3} {
+			break
+		}
+	} while {[incr i -1]}
+	return $i
+} -result 3
+
+tcltest::test dowhile-6.1 {
+	break in the body
+} -body {
+	set i 5
+	set v 0
+	do {
+		if {$i == 3} {
+			break
+		}
+		incr v
+	} while {[incr i -1]}
+	return [list $i $v]
+} -result {3 2}
+
+tcltest::test dowhile-7.0 {
+	continue in the body
+} -body {
+	set i 5
+	set v 0
+	do {
+		if {$i == 3} {
+			continue
+		}
+		incr v
+	} while {[incr i -1]}
+	return [list $i $v]
+} -result {0 4}
+
+tcltest::test dowhile-7.1 {
+	continue in the body
+} -body {
+	set i 5
+	set v 0
+	do {
+		if {$i == 3} {
+			continue
+		}
+		incr v
+	} while {[incr i -1] && [incr v]}
+	return [list $i $v]
+} -result {0 8}
+
+tcltest::test dowhile-8.0 {
+	error in the body
+} -body {
+	set i 5
+	set code [catch {do { error "some err"; } while {[incr i -1]}} ret]
+	return [list $code $::errorCode $::errorInfo $ret]
+} -result {1 NONE {some err
+    while executing
+"do { error "some err"; } while {[incr i -1]}"} {some err}}
+
+tcltest::test dowhile-9.0 {
+	check a return value
+} -body {
+	set i 5
+	set ret [do {
+	} while {[incr i -1]}]
+	return [list $i $ret]
+} -result {0 {}}
+
+tcltest::test dowhile-9.1 {
+	check a return value
+} -body {
+	set i 5
+	set ret [do {
+		if {$i == 3} break
+	} while {[incr i -1]}]
+	return [list $i $ret]
+} -result {3 {}}
+
+tcltest::cleanupTests
