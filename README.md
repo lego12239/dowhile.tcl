@@ -1,6 +1,7 @@
 Overview
 ========
 dowhile package implement a do-while loop.
+See Warning section at bottom!
 
 Syntax
 ======
@@ -27,4 +28,16 @@ set i 5
 do {
 	puts $i
 } while {[incr i -1]}
+```
+
+Warning!
+========
+This do-while is ~7.5 times slower than tcl while. Even naive C version of
+this do-while(without coroutine support) is 3.5 times slower than tcl while.
+So, the simple way is to use this replacement of do-while in a code:
+```
+while 1 {
+	BODY
+	if {!COND} break
+}
 ```
