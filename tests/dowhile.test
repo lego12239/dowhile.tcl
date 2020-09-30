@@ -98,6 +98,30 @@ tcltest::test dowhile-5.1 {
 	return $i
 } -returnCodes return -result {3 77}
 
+tcltest::test dowhile-5.2 {
+	return in the body
+} -body {
+	set i 5
+	do {
+		if {$i == 5} {
+			return [list $i 77]
+		}
+	} while {[incr i -1]}
+	return $i
+} -returnCodes return -result {5 77}
+
+tcltest::test dowhile-5.3 {
+	return in the body
+} -body {
+	set i 5
+	do {
+		if {$i == 1} {
+			return [list $i 77]
+		}
+	} while {[incr i -1]}
+	return $i
+} -returnCodes return -result {1 77}
+
 tcltest::test dowhile-6.0 {
 	break in the body
 } -body {
@@ -124,6 +148,34 @@ tcltest::test dowhile-6.1 {
 	return [list $i $v]
 } -result {3 2}
 
+tcltest::test dowhile-6.2 {
+	break in the body
+} -body {
+	set i 5
+	set v 0
+	do {
+		if {$i == 5} {
+			break
+		}
+		incr v
+	} while {[incr i -1]}
+	return [list $i $v]
+} -result {5 0}
+
+tcltest::test dowhile-6.3 {
+	break in the body
+} -body {
+	set i 5
+	set v 0
+	do {
+		if {$i == 1} {
+			break
+		}
+		incr v
+	} while {[incr i -1]}
+	return [list $i $v]
+} -result {1 4}
+
 tcltest::test dowhile-7.0 {
 	continue in the body
 } -body {
@@ -145,6 +197,34 @@ tcltest::test dowhile-7.1 {
 	set v 0
 	do {
 		if {$i == 3} {
+			continue
+		}
+		incr v
+	} while {[incr i -1] && [incr v]}
+	return [list $i $v]
+} -result {0 8}
+
+tcltest::test dowhile-7.2 {
+	continue in the body
+} -body {
+	set i 5
+	set v 0
+	do {
+		if {$i == 5} {
+			continue
+		}
+		incr v
+	} while {[incr i -1] && [incr v]}
+	return [list $i $v]
+} -result {0 8}
+
+tcltest::test dowhile-7.3 {
+	continue in the body
+} -body {
+	set i 5
+	set v 0
+	do {
+		if {$i == 1} {
 			continue
 		}
 		incr v
