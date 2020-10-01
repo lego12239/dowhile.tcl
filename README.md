@@ -32,7 +32,7 @@ do {
 
 Warning!
 ========
-This do-while is ~7.5 times slower than tcl while. Even naive C version of
+This do-while is ~4.0 times slower than tcl while. Even naive C version of
 this do-while(without coroutine support) is 3.5 times slower than tcl while.
 So, the simple way is to use this replacement of do-while in a code:
 ```

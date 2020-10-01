@@ -19,21 +19,22 @@ proc do {body keyword expression} {
 	if {$keyword ne "while"} {
 		return -code error "wrong keyword \"$keyword\": must be \"while\""
 	}
-	set condition [list expr $expression]
-	while 1 {
-		switch [set code [catch {uplevel 1 $body} ret]] {
-			1 -
-			2 {
-				# error, return
-				return -code $code $ret
-			}
-			3 {
-				# break
-				break
-			}
+	switch [set code [catch {uplevel 1 $body} ret]] {
+		1 -
+		2 {
+			# error, return
+			return -code $code $ret
 		}
-		if {![uplevel 1 $condition]} {
-			break
+		3 {
+			# break
+			return
+		}
+	}
+	switch [set code [catch {uplevel 1 [list while $expression $body]} ret]] {
+		1 -
+		2 {
+			# error, return
+			return -code $code $ret
 		}
 	}
 	return
