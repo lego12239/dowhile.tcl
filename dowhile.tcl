@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU Lesser General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-package provide dowhile 1.0
+package provide dowhile 2.0
 
 proc do {body keyword expression} {
 	if {$keyword ne "while"} {
