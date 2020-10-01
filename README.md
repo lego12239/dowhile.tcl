@@ -1,7 +1,6 @@
 Overview
 ========
 dowhile package implement a do-while loop.
-See Warning section at bottom!
 
 Syntax
 ======
@@ -30,14 +29,7 @@ do {
 } while {[incr i -1]}
 ```
 
-Warning!
-========
-This do-while is ~4.0 times slower than tcl while. Even naive C version of
-this do-while(without coroutine support) is 3.5 times slower than tcl while.
-So, the simple way is to use this replacement of do-while in a code:
-```
-while 1 {
-	BODY
-	if {!COND} break
-}
-```
+Thanks
+======
+Thanks for the speed up idea and explanations to Peter Da Silva, Reinhard Max,
+Sergey G. Brester and others members of tcl-core mailing list.
