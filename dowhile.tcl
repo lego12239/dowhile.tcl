@@ -30,7 +30,9 @@ proc do {body keyword expression} {
 			return
 		}
 	}
-	switch [set code [catch {uplevel 1 [list while $expression $body]} ret]] {
+	# The semicolon before closing double quote is doing all magic with
+	# speed up.
+	switch [set code [catch {uplevel 1 "[list while $expression $body];"} ret]] {
 		1 -
 		2 {
 			# error, return
