@@ -12,3 +12,6 @@ clean-all: clean
 
 test:
 	cd tests && ./tests.tcl
+
+bench:
+	./bench.tcl
